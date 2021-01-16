@@ -1,0 +1,149 @@
+env:
+  global:
+    - CONAN_TOTAL_PAGES: 2
+
+linux: &linux
+   os: linux
+   dist: xenial
+   language: python
+   python: "3.7"
+   services:
+     - docker
+
+osx: &osx
+   os: osx
+   language: generic
+
+matrix:
+   include:
+      - <<: *linux
+        env: CONAN_GCC_VERSIONS=7 CONAN_CURRENT_PAGE=1 MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+        addons:
+          apt:
+            sources:
+              - ubuntu-toolchain-r-test
+            packages:
+              - g++-7
+      - <<: *linux
+        env: CONAN_GCC_VERSIONS=7 CONAN_CURRENT_PAGE=2 MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+        addons:
+          apt:
+            sources:
+              - ubuntu-toolchain-r-test
+            packages:
+              - g++-7
+      - <<: *linux
+        env: CONAN_GCC_VERSIONS=8 CONAN_CURRENT_PAGE=1 MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+        addons:
+          apt:
+            sources:
+              - ubuntu-toolchain-r-test
+            packages:
+              - g++-8
+      - <<: *linux
+        env: CONAN_GCC_VERSIONS=8 CONAN_CURRENT_PAGE=2 MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+        addons:
+          apt:
+            sources:
+              - ubuntu-toolchain-r-test
+            packages:
+              - g++-8
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=6.0 CONAN_CURRENT_PAGE=1 MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+        addons:
+          apt:
+            sources:
+              - ubuntu-toolchain-r-test
+              - llvm-toolchain-precise-6.0
+            packages:
+              - clang-6.0
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=6.0 CONAN_CURRENT_PAGE=2 MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+        addons:
+          apt:
+            sources:
+              - ubuntu-toolchain-r-test
+              - llvm-toolchain-precise-6.0
+            packages:
+              - clang-6.0
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=7.0 CONAN_CURRENT_PAGE=1 MATRIX_EVAL="CC=clang-7.0 && CXX=clang++-7.0"
+        addons:
+          apt:
+            sources:
+              - ubuntu-toolchain-r-test
+              - llvm-toolchain-precise-7.0
+            packages:
+              - clang-7.0
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=7.0 CONAN_CURRENT_PAGE=2 MATRIX_EVAL="CC=clang-7.0 && CXX=clang++-7.0"
+        addons:
+          apt:
+            sources:
+              - ubuntu-toolchain-r-test
+              - llvm-toolchain-precise-7.0
+            packages:
+              - clang-7.0
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=8 CONAN_CURRENT_PAGE=1 MATRIX_EVAL="CC=clang-8 && CXX=clang++-8"
+        addons:
+          apt:
+            sources:
+              - ubuntu-toolchain-r-test
+              - llvm-toolchain-precise-8
+            packages:
+              - clang-8
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=8 CONAN_CURRENT_PAGE=2 MATRIX_EVAL="CC=clang-8 && CXX=clang++-8"
+        addons:
+          apt:
+            sources:
+              - ubuntu-toolchain-r-test
+              - llvm-toolchain-precise-8
+            packages:
+              - clang-8
+
+      - <<: *osx
+        osx_image: xcode9.4
+        env: CONAN_APPLE_CLANG_VERSIONS=9.1 CONAN_CURRENT_PAGE=1
+      - <<: *osx
+        osx_image: xcode9.4
+        env: CONAN_APPLE_CLANG_VERSIONS=9.1 CONAN_CURRENT_PAGE=2
+      - <<: *osx
+        osx_image: xcode10.1
+        env: CONAN_APPLE_CLANG_VERSIONS=10.0 CONAN_CURRENT_PAGE=1
+      - <<: *osx
+        osx_image: xcode10.1
+        env: CONAN_APPLE_CLANG_VERSIONS=10.0 CONAN_CURRENT_PAGE=2
+
+before_install:
+    - eval "${MATRIX_EVAL}"
+
+install:
+  # We do this conditionally because it saves us some downloading if the
+  # version is the same.
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - source "$HOME/miniconda/etc/profile.d/conda.sh"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
+  - conda init bash
+  - source $HOME/.bashrc
+  - conda create -y -n build-v8 python=2.7
+
+  - conda activate build-v8
+  - chmod +x .ci/install.sh
+  - ./.ci/install.sh
+
+script:
+  - conda activate build-v8
+  - chmod +x .ci/run.sh
+  - ./.ci/run.sh
+

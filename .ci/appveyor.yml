@@ -1,0 +1,24 @@
+build: false
+
+environment:
+    PYTHON_HOME: "C:\\Python27"
+    CONAN_TOTAL_PAGES: 2
+
+    matrix:
+        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 15
+          CONAN_CURRENT_PAGE: 1
+        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+          CONAN_VISUAL_VERSIONS: 15
+          CONAN_CURRENT_PAGE: 2
+
+install:
+  - set PATH=%PYTHON_HOME%;%PYTHON_HOME%/Scripts/;%PATH%
+  - pip.exe install conan --upgrade
+  - pip.exe install conan_package_tools bincrafters_package_tools
+  - conan user # It creates the conan data directory
+  - conan remote add altairwei https://api.bintray.com/conan/altairwei/conan --insert
+
+test_script:
+  - python build.py
+
