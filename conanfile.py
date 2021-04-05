@@ -188,7 +188,7 @@ class V8Conan(ConanFile):
         self.copy(pattern="LICENSE*", dst="licenses", src="v8")
         self.copy(pattern="*v8_monolith.a", dst="lib", keep_path=False)
         self.copy(pattern="*v8_monolith.lib", dst="lib", keep_path=False)
-        self.copy(pattern="*.h", dst="include", src="v8/include", keep_path=True)
+        self.copy(pattern="*.h", dst="include/v8", src="v8/include", keep_path=True)
 
 
     def package_info(self):

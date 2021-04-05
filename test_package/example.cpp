@@ -4,8 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "include/libplatform/libplatform.h"
-#include "include/v8.h"
+
+#include "v8/libplatform/libplatform.h"
+#include "v8/v8.h"
 
 int main(int argc, char* argv[]) {
   // Initialize V8.
