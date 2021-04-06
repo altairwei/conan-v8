@@ -192,9 +192,6 @@ class V8Conan(ConanFile):
 
 
     def package_info(self):
-        # fix issue on Windows and OSx not finding the KHR files
-        # self.cpp_info.includedirs.append(os.path.join("include", "MagnumExternal", "OpenGL"))
-        # builtLibs = tools.collect_libs(self)
-        self.cpp_info.libs = ["v8_monolith"]  # sort_libs(correct_order=allLibs, libs=builtLibs, lib_suffix=suffix, reverse_result=True)
+        self.cpp_info.libs = ["v8_monolith"]
         self.cpp_info.includedirs.append("include/v8")
 
