@@ -11,6 +11,6 @@ if __name__ == "__main__":
         builder.add(settings={"arch": "x86_64", "build_type": "Release", "compiler": "Visual Studio", "compiler.version": 14, "compiler.runtime": "MT" })
         builder.add(settings={"arch": "x86_64", "build_type": "Debug"  , "compiler": "Visual Studio", "compiler.version": 14, "compiler.runtime": "MTd" })
     else:
-        builder.add(settings={"arch": "x86_64", "build_type": "Release", "compiler": os.environ["COMPILER_NAME"], "compiler.version": os.environ["COMPILER_VERSION"]})
-        builder.add(settings={"arch": "x86_64", "build_type": "Debug"  , "compiler": os.environ["COMPILER_NAME"], "compiler.version": os.environ["COMPILER_VERSION"]})
+        builder.add(settings={"arch": "x86_64", "build_type": "Release", "compiler": os.environ["COMPILER_NAME"], "compiler.version": os.environ["COMPILER_VERSION"], "compiler.libcxx": "libstdc++"})
+        builder.add(settings={"arch": "x86_64", "build_type": "Debug"  , "compiler": os.environ["COMPILER_NAME"], "compiler.version": os.environ["COMPILER_VERSION"], "compiler.libcxx": "libstdc++"})
     builder.run()
