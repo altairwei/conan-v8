@@ -131,6 +131,33 @@ class V8Conan(ConanFile):
         cmd = "export DEBIAN_FRONTEND=noninteractive && " + cmd
         self.run(cmd)
 
+
+    def _gen_arguments(self):
+        # Refer to v8/infra/mb/mb_config.pyl
+        gen_arguments = [
+            "is_debug = " + ("true" if str(self.settings.build_type) == "Debug" else "false"),
+            "target_cpu = " + ('"x64"' if str(self.settings.arch) == "x86_64" else '"x86"'),
+            "is_component_build = false",
+            "v8_monolithic = true",
+            "is_chrome_branded = false",
+            "v8_static_library = true",
+            "treat_warnings_as_errors = false",
+            "v8_use_external_startup_data = false"
+        ]
+        # v8_enable_backtrace=false, v8_enable_i18n_support
+
+        if tools.os_info.is_linux or tools.os_info.is_macos:
+            gen_arguments += [
+                "use_sysroot = false",
+                "use_custom_libcxx = false",
+                "use_custom_libcxx_for_host = false",
+                "use_glib = false",
+                "is_clang = " + ("true" if "clang" in str(self.settings.compiler).lower() else "false")
+            ]
+        
+        return gen_arguments
+
+
     def build(self):
         v8_source_root = os.path.join(self.source_folder, "v8")
         self._set_environment_vars()
@@ -146,31 +173,11 @@ class V8Conan(ConanFile):
 
         with tools.chdir(v8_source_root):
             self.run("gclient sync")
-            # Refer to v8/infra/mb/mb_config.pyl
-            gen_arguments = [
-                "is_debug = " + ("true" if str(self.settings.build_type) == "Debug" else "false"),
-                "target_cpu = " + ('"x64"' if str(self.settings.arch) == "x86_64" else '"x86"'),
-                "is_component_build = false",
-                "v8_monolithic = true",
-                "is_chrome_branded = false",
-                "v8_static_library = true",
-                "treat_warnings_as_errors = false",
-                "v8_use_external_startup_data = false"
-            ]
-            # v8_enable_backtrace=false, v8_enable_i18n_support
 
-            if tools.os_info.is_linux:
-                gen_arguments += [
-                    "use_sysroot = false",
-                    "use_custom_libcxx = false",
-                    "use_custom_libcxx_for_host = false",
-                    "use_glib = false",
-                    "is_clang = " + ("true" if "clang" in str(self.settings.compiler).lower() else "false")
-                ]
-
+            args = self._gen_arguments()
             args_gn_file = os.path.join(self.build_folder, "args.gn")
             with open(args_gn_file, "w") as f:
-                f.write("\n".join(gen_arguments))
+                f.write("\n".join(args))
 
             generator_call = "gn gen {folder}".format(folder=self.build_folder)
 
