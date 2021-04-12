@@ -6,6 +6,8 @@ conan_basic_setup()
 
 find_package(Threads REQUIRED)
 
+add_definitions(-DV8_COMPRESS_POINTERS)
+
 add_executable(example example.cpp)
 target_link_libraries(example ${CONAN_LIBS} Threads::Threads)
 
