@@ -6,6 +6,7 @@ conan_basic_setup()
 
 find_package(Threads REQUIRED)
 
+set (CMAKE_CXX_STANDARD 11)
 add_definitions(-DV8_COMPRESS_POINTERS)
 
 add_executable(example example.cpp)
