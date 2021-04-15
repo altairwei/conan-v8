@@ -6,11 +6,26 @@ import platform
 from cpt.packager import ConanMultiPackager
 
 if __name__ == "__main__":
-    builder = ConanMultiPackager(username="altair_wei", upload_dependencies="all", build_policy="missing")
+    builder = ConanMultiPackager(
+        username="altair_wei",
+        upload_dependencies="all",
+        build_policy="missing")
     if platform.system() == "Windows":
-        builder.add(settings={"arch": "x86_64", "build_type": "Release", "compiler": "Visual Studio", "compiler.version": 14, "compiler.runtime": "MT" })
-        builder.add(settings={"arch": "x86_64", "build_type": "Debug"  , "compiler": "Visual Studio", "compiler.version": 14, "compiler.runtime": "MTd" })
+        for build_type in ["Release", "Debug"]:
+            builder.add(settings={
+                "arch": "x86_64",
+                "build_type": build_type,
+                "compiler": "Visual Studio",
+                "compiler.version": 14,
+                "compiler.runtime": "MT"
+            })
     else:
-        builder.add(settings={"arch": "x86_64", "build_type": "Release", "compiler": os.environ["COMPILER_NAME"], "compiler.version": os.environ["COMPILER_VERSION"], "compiler.libcxx": "libstdc++"})
-        builder.add(settings={"arch": "x86_64", "build_type": "Debug"  , "compiler": os.environ["COMPILER_NAME"], "compiler.version": os.environ["COMPILER_VERSION"], "compiler.libcxx": "libstdc++"})
+        for build_type in ["Release", "Debug"]:
+            builder.add(settings={
+                "arch": "x86_64",
+                "build_type": build_type,
+                "compiler": os.environ["COMPILER_NAME"],
+                "compiler.version": os.environ["COMPILER_VERSION"],
+                "compiler.libcxx": os.environ["LIBCXX"]
+            })
     builder.run()

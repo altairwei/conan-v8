@@ -24,6 +24,8 @@ class V8Conan(ConanFile):
     generators = "cmake"
     short_paths = True
 
+    exports_sources = ["msvc_crt.gni"]
+
     _source_subfolder = "source_subfolder"
     _build_subfolder = "build_subfolder"
 
@@ -131,6 +133,20 @@ class V8Conan(ConanFile):
         cmd = "export DEBIAN_FRONTEND=noninteractive && " + cmd
         self.run(cmd)
 
+    def _patch_msvc_runtime(self):
+        v8_source_root = os.path.join(self.source_folder, "v8")
+        shutil.copy("msvc_crt.gni",
+            os.path.join(v8_source_root, "build", "config", "msvc_crt.gni"))
+        config_gn_file = os.path.join(v8_source_root, "build", "config", "BUILDCONFIG.gn")
+        tools.replace_in_file(config_gn_file,
+            "# found in the LICENSE file.",
+            "# found in the LICENSE file.\n"
+            "import(\"//build/config/msvc_crt.gni\")\n")
+        tools.replace_in_file(config_gn_file,
+            "//build/config/win:default_crt",
+            ":conan_crt"
+        )
+
 
     def _gen_arguments(self):
         # Refer to v8/infra/mb/mb_config.pyl
@@ -154,7 +170,12 @@ class V8Conan(ConanFile):
                 "use_glib = false",
                 "is_clang = " + ("true" if "clang" in str(self.settings.compiler).lower() else "false")
             ]
-        
+
+        if tools.os_info.is_windows:
+            gen_arguments += [
+                "conan_compiler_runtime = \"%s\"" % str(self.settings.compiler.runtime)
+            ]
+
         return gen_arguments
 
 
@@ -162,14 +183,11 @@ class V8Conan(ConanFile):
         v8_source_root = os.path.join(self.source_folder, "v8")
         self._set_environment_vars()
 
+        if tools.os_info.is_windows and str(self.settings.compiler) == "Visual Studio":
+            self._patch_msvc_runtime()
+
         if tools.os_info.is_linux:
             self._install_system_requirements_linux()
-
-        # fix gn always detecting the runtime on its own:
-        if str(self.settings.compiler) == "Visual Studio" and str(self.settings.compiler.runtime) in ["MD", "MDd"]:
-            build_gn_file = os.path.join(v8_source_root, "build", "config", "win", "BUILD.gn")
-            #print("replacing MT / MTd with MD / MDd in gn file." + build_gn_file)
-            #tools.replace_in_file(file_path=build_gn_file, search="MT", replace="MD", strict=False)
 
         with tools.chdir(v8_source_root):
             self.run("gclient sync")

@@ -13,31 +13,38 @@ jobs:
             version: 7
             cc: gcc-7
             cxx: g++-7
+            libcxx: libstdc++
           - compiler: gcc
             version: 8
             cc: gcc-8
             cxx: g++-8
+            libcxx: libstdc++
           - compiler: gcc
             version: 9
             cc: gcc-9
             cxx: g++-9
+            libcxx: libstdc++
           - compiler: clang
             version: '6.0'
             cc: clang-6.0
             cxx: clang++-6.0
+            libcxx: libc++
           - compiler: clang
             version: '7.0'
             cc: clang-7
             cxx: clang++-7
+            libcxx: libc++
           - compiler: clang
             version: 8
             cc: clang-8
             cxx: clang++-8
+            libcxx: libc++
     env:
       COMPILER_NAME: ${{ matrix.compiler }}
       COMPILER_VERSION: ${{ matrix.version }}
       CC: ${{ matrix.cc }}
       CXX: ${{ matrix.cxx }}
+      LIBCXX: ${{ matrix.libcxx }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
