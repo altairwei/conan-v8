@@ -183,14 +183,14 @@ class V8Conan(ConanFile):
         v8_source_root = os.path.join(self.source_folder, "v8")
         self._set_environment_vars()
 
-        if tools.os_info.is_windows and str(self.settings.compiler) == "Visual Studio":
-            self._patch_msvc_runtime()
-
         if tools.os_info.is_linux:
             self._install_system_requirements_linux()
 
         with tools.chdir(v8_source_root):
             self.run("gclient sync")
+
+            if tools.os_info.is_windows and str(self.settings.compiler) == "Visual Studio":
+                self._patch_msvc_runtime()
 
             args = self._gen_arguments()
             args_gn_file = os.path.join(self.build_folder, "args.gn")
