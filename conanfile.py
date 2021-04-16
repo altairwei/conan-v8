@@ -163,7 +163,7 @@ class V8Conan(ConanFile):
             "use_custom_libcxx_for_host = false",
             "use_glib = false",
             "use_sysroot = false",
-            "v8_enable_backtrace = false",
+            #"v8_enable_backtrace = false",
             "is_clang = " + ("true" if "clang" in str(self.settings.compiler).lower() else "false")
         ]
         # v8_enable_backtrace=false, v8_enable_i18n_support
