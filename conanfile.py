@@ -30,6 +30,7 @@ class V8Conan(ConanFile):
     _build_subfolder = "build_subfolder"
 
     def _check_python_version(self):
+        """depot_tools requires python >= 2.7.5 or >= 3.8 for python 3 support."""
         # Check if a valid python2 is available in PATH or it will failflex
         # Start by checking if python2 can be found
         python_exe = tools.which("python2")
@@ -38,30 +39,35 @@ class V8Conan(ConanFile):
             python_exe = tools.which("python")
 
         if not python_exe:
-            msg = ("Python2 must be available in PATH "
+            msg = ("Python must be available in PATH "
                     "in order to build v8")
             raise ConanInvalidConfiguration(msg)
         # In any case, check its actual version for compatibility
         from six import StringIO  # Python 2 and 3 compatible
-        mybuf = StringIO()
+        version_buf = StringIO()
         cmd_v = "{} --version".format(python_exe)
-        self.run(cmd_v, output=mybuf)
+        self.run(cmd_v, output=version_buf)
         p = re.compile(r'Python (\d+\.\d+\.\d+)')
-        verstr = p.match(mybuf.getvalue().strip()).group(1)
+        verstr = p.match(version_buf.getvalue().strip()).group(1)
         if verstr.endswith('+'):
             verstr = verstr[:-1]
         version = tools.Version(verstr)
         # >= 2.7.5 & < 3
-        v_min = "2.7.5"
-        v_max = "3.0.0"
-        if (version >= v_min) and (version < v_max):
+        py2_min = "2.7.5"
+        py2_max = "3.0.0"
+        py3_min = "3.8.0"
+        if (version >= py2_min) and (version < py2_max):
             msg = ("Found valid Python 2 required for v8:"
-                    " version={}, path={}".format(mybuf.getvalue(), python_exe))
+                    " version={}, path={}".format(version_buf.getvalue().strip(), python_exe))
+            self.output.success(msg)
+        elif version >= py3_min:
+            msg = ("Found valid Python 3 required for v8:"
+                    " version={}, path={}".format(version_buf.getvalue().strip(), python_exe))
             self.output.success(msg)
         else:
-            msg = ("Found Python 2 in path, but with invalid version {}"
-                    " (v8 requires >= {} & < "
-                    "{})".format(verstr, v_min, v_max))
+            msg = ("Found Python in path, but with invalid version {}"
+                    " (v8 requires >= {} and < "
+                    "{} or >= {})".format(verstr, py2_min, py2_max, py3_min))
             raise ConanInvalidConfiguration(msg)
 
     def system_requirements(self):
@@ -75,16 +81,7 @@ class V8Conan(ConanFile):
                     self.run("sudo dpkg-reconfigure --frontend noninteractive tzdata")
             if not tools.which("lsb-release"):
                 tools.SystemPackageTool().install("lsb-release")
-        # python >= 2.7.5 & < 3
-        try:
-           self._check_python_version()
-        except ConanInvalidConfiguration as e:
-            if tools.os_info.is_windows:
-                raise e
-            self.output.info("Python 2 not detected in path. Trying to install it")
-            tools.SystemPackageTool().install(["python2", "python"])
-            self._check_python_version()
-            raise
+        self._check_python_version()
 
     def build_requirements(self):
         if not tools.which("ninja"):

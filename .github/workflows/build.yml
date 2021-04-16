@@ -30,16 +30,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python 3.7
+      - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7' 
+          python-version: '3.8' 
           architecture: 'x64'
-
-      - name: Find python
-        id: find_python
-        run: |
-          echo "::set-output name=python::$(which python)"
 
       - name: Install compiler
         run: |
@@ -52,24 +47,10 @@ jobs:
       - name: Install dependencies
         run: .ci/install_linux_deps.sh
 
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          auto-update-conda: true
-          python-version: 3.7
-
-      - name: Setup conda
-        run: |
-          conda config --set always_yes yes --set changeps1 no
-          conda update -q conda
-          conda info -a
-          conda init bash
-          conda create -y -n build-v8 python=2.7
-
       - name: Build V8
         shell: bash -l {0}
         run: |
-          conda activate build-v8
-          ${{ steps.find_python.outputs.python }} build.py
+          python build.py
 
   for_macos:
     name: Build v8 on MacOS
@@ -83,27 +64,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8' 
+          architecture: 'x64'
+
       - name: Install dependencies
         run: .ci/install_macos_deps.sh
-
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          auto-update-conda: true
-          python-version: 3.7
-
-      - name: Setup conda
-        run: |
-          conda config --set always_yes yes --set changeps1 no
-          conda update -q conda
-          conda info -a
-          conda init bash
-          conda create -y -n build-v8 python=2.7
 
       - name: Build V8
         shell: bash -l {0}
         run: |
-          conda activate build-v8
-          ${{ steps.find_python.outputs.python }} build.py
+          python build.py
   
   for_windows:
     name: Build v8 on Windows
@@ -117,10 +90,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python 3.7
+      - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7' 
+          python-version: '3.8' 
           architecture: 'x64'
 
       - name: Install Conan
@@ -130,21 +103,7 @@ jobs:
           pip3 install conan_package_tools bincrafters_package_tools
           conan user
 
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          auto-update-conda: true
-          python-version: 3.7
-
-      - name: Setup conda
-        run: |
-          conda config --set always_yes yes --set changeps1 no
-          conda update -q conda
-          conda info -a
-          conda init powershell
-          conda create -y -n build-v8 python=2.7
-
       - name: Build V8
         shell: powershell
         run: |
-          conda activate build-v8
-          ${{ steps.find_python.outputs.python }} build.py
+          python build.py
