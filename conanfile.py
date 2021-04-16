@@ -159,16 +159,13 @@ class V8Conan(ConanFile):
             "treat_warnings_as_errors = false",
             "v8_use_external_startup_data = false",
             "use_custom_libcxx = false",
-            "use_custom_libcxx_for_host = false"
+            "use_custom_libcxx_for_host = false",
+            "use_glib = false",
+            "use_sysroot = false",
+            "v8_enable_backtrace = false",
+            "is_clang = " + ("true" if "clang" in str(self.settings.compiler).lower() else "false")
         ]
         # v8_enable_backtrace=false, v8_enable_i18n_support
-
-        if tools.os_info.is_linux or tools.os_info.is_macos:
-            gen_arguments += [
-                "use_sysroot = false",
-                "use_glib = false",
-                "is_clang = " + ("true" if "clang" in str(self.settings.compiler).lower() else "false")
-            ]
 
         if tools.os_info.is_windows:
             gen_arguments += [
