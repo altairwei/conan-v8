@@ -135,7 +135,8 @@ class V8Conan(ConanFile):
 
     def _patch_msvc_runtime(self):
         v8_source_root = os.path.join(self.source_folder, "v8")
-        shutil.copy("msvc_crt.gni",
+        shutil.copy(
+            os.path.join(self.source_folder, "msvc_crt.gni"),
             os.path.join(v8_source_root, "build", "config", "msvc_crt.gni"))
         config_gn_file = os.path.join(v8_source_root, "build", "config", "BUILDCONFIG.gn")
         tools.replace_in_file(config_gn_file,
