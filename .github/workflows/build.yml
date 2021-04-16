@@ -74,7 +74,11 @@ jobs:
   for_macos:
     name: Build v8 on MacOS
     runs-on: macos-latest
-
+    strategy:
+      matrix:
+        conan_page: [1, 2]
+    env:
+      CONAN_CURRENT_PAGE: ${{ matrix.conan_page }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -99,12 +103,16 @@ jobs:
         shell: bash -l {0}
         run: |
           conda activate build-v8
-          conan create . altairwei/testing --build missing
+          ${{ steps.find_python.outputs.python }} build.py
   
   for_windows:
     name: Build v8 on Windows
     runs-on: windows-latest
-
+    strategy:
+      matrix:
+        conan_page: [1, 2]
+    env:
+      CONAN_CURRENT_PAGE: ${{ matrix.conan_page }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -139,4 +147,4 @@ jobs:
         shell: powershell
         run: |
           conda activate build-v8
-          conan create . altairwei/testing --build missing
+          ${{ steps.find_python.outputs.python }} build.py

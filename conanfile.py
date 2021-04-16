@@ -136,7 +136,9 @@ class V8Conan(ConanFile):
     def _patch_msvc_runtime(self):
         v8_source_root = os.path.join(self.source_folder, "v8")
         msvc_config_folder = os.path.join(v8_source_root, "build", "config", "msvc")
-        os.makedirs(msvc_config_folder, exist_ok=True)
+        if os.path.exists(os.path.join(msvc_config_folder, "BUILD.gn")):
+            return
+        tools.mkdir(msvc_config_folder)
         shutil.copy(
             os.path.join(self.source_folder, "msvc_crt.gn"),
             os.path.join(msvc_config_folder, "BUILD.gn"))
@@ -196,10 +198,6 @@ class V8Conan(ConanFile):
 
             generator_call = "gn gen {folder}".format(folder=self.build_folder)
 
-            # maybe todo: absolute path..
-            #if tools.os_info.is_windows:
-                # this is picking up the python shipped via depot_tools, since we got it in the path.
-            #    generator_call = "python " + generator_call
             self.run("python --version")
             print(generator_call)
             self.run(generator_call)
