@@ -4,9 +4,8 @@ set -e -o pipefail
 shopt -s failglob
 export LC_ALL=C
 
-# Setup python ppa
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt-get update
+# Fix deps
+sudo apt remove -y php7.4-common 
 
 # Install conan
 pip3 install wheel setuptools
