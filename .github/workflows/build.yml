@@ -5,7 +5,7 @@ on: push
 jobs:
   for_linux:
     name: Build v8 on linux
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
         include:
@@ -64,7 +64,7 @@ jobs:
         run: |
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal main"
+          sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main"
           sudo apt-get update
           sudo apt-get install -y -qq --no-install-recommends ${{ matrix.cc }} ${{ matrix.cxx }}
 
