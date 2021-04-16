@@ -2,6 +2,9 @@ name: Build V8
 
 on: push
 
+env:
+  CONAN_TOTAL_PAGES: 2
+
 jobs:
   for_linux:
     name: Build v8 on linux
