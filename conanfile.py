@@ -24,7 +24,7 @@ class V8Conan(ConanFile):
     generators = "cmake"
     short_paths = True
 
-    exports_sources = ["msvc_crt.gni"]
+    exports_sources = ["msvc_crt.gn"]
 
     _source_subfolder = "source_subfolder"
     _build_subfolder = "build_subfolder"
