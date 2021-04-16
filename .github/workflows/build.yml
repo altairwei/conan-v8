@@ -8,43 +8,21 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        include:
-          - compiler: gcc
-            version: 7
-            cc: gcc-7
-            cxx: g++-7
-            libcxx: libstdc++
-          - compiler: gcc
-            version: 8
-            cc: gcc-8
-            cxx: g++-8
-            libcxx: libstdc++
-          - compiler: gcc
-            version: 9
-            cc: gcc-9
-            cxx: g++-9
-            libcxx: libstdc++
-          - compiler: clang
-            version: '6.0'
-            cc: clang-6.0
-            cxx: clang++-6.0
-            libcxx: libstdc++
-          - compiler: clang
-            version: '7.0'
-            cc: clang-7
-            cxx: clang++-7
-            libcxx: libstdc++
-          - compiler: clang
-            version: 8
-            cc: clang-8
-            cxx: clang++-8
-            libcxx: libstdc++
+        compiler:
+          - { name: gcc,    version: 7,       cc: gcc-7,      cxx: g++-7,       libcxx: libstdc++ }
+          - { name: gcc,    version: 8,       cc: gcc-8,      cxx: g++-8,       libcxx: libstdc++ }
+          - { name: gcc,    version: 9,       cc: gcc-9,      cxx: g++-9,       libcxx: libstdc++ }
+          - { name: clang,  version: '6.0',   cc: clang-6.0,  cxx: clang++-6.0, libcxx: libstdc++ }
+          - { name: clang,  version: '7.0',   cc: clang-7,    cxx: clang++-7,   libcxx: libstdc++ }
+          - { name: clang,  version: 8,       cc: clang-8,    cxx: clang++-8,   libcxx: libstdc++ }
+        conan_page: [1, 2]
     env:
-      COMPILER_NAME: ${{ matrix.compiler }}
-      COMPILER_VERSION: ${{ matrix.version }}
-      CC: ${{ matrix.cc }}
-      CXX: ${{ matrix.cxx }}
-      LIBCXX: ${{ matrix.libcxx }}
+      COMPILER_NAME: ${{ matrix.compiler.name }}
+      COMPILER_VERSION: ${{ matrix.compiler.version }}
+      CC: ${{ matrix.compiler.cc }}
+      CXX: ${{ matrix.compiler.cxx }}
+      LIBCXX: ${{ matrix.compiler.libcxx }}
+      CONAN_CURRENT_PAGE: ${{ matrix.conan_page }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
