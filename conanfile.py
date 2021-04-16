@@ -157,7 +157,7 @@ class V8Conan(ConanFile):
             "is_chrome_branded = false",
             "v8_static_library = true",
             "treat_warnings_as_errors = false",
-            "v8_use_external_startup_data = false"
+            "v8_use_external_startup_data = false",
             "use_custom_libcxx = false",
             "use_custom_libcxx_for_host = false"
         ]
