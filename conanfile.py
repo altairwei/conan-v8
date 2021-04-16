@@ -158,6 +158,7 @@ class V8Conan(ConanFile):
             "v8_static_library = true",
             "treat_warnings_as_errors = false",
             "v8_use_external_startup_data = false",
+            # Do not use libc++ shipped with v8
             "use_custom_libcxx = false",
             "use_custom_libcxx_for_host = false",
             "use_glib = false",

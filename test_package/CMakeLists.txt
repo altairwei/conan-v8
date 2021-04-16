@@ -6,8 +6,9 @@ conan_basic_setup()
 
 find_package(Threads REQUIRED)
 
-set (CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 14)
 add_definitions(-DV8_COMPRESS_POINTERS)
+add_definitions(-DWIN32_LEAN_AND_MEAN)
 
 add_executable(example example.cpp)
 target_link_libraries(example ${CONAN_LIBS} Threads::Threads)
