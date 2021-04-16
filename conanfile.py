@@ -135,17 +135,15 @@ class V8Conan(ConanFile):
 
     def _patch_msvc_runtime(self):
         v8_source_root = os.path.join(self.source_folder, "v8")
+        msvc_config_folder = os.path.join(v8_source_root, "build", "config", "msvc")
+        os.makedirs(msvc_config_folder, exist_ok=True)
         shutil.copy(
-            os.path.join(self.source_folder, "msvc_crt.gni"),
-            os.path.join(v8_source_root, "build", "config", "msvc_crt.gni"))
+            os.path.join(self.source_folder, "msvc_crt.gn"),
+            os.path.join(msvc_config_folder, "BUILD.gn"))
         config_gn_file = os.path.join(v8_source_root, "build", "config", "BUILDCONFIG.gn")
         tools.replace_in_file(config_gn_file,
-            "# found in the LICENSE file.",
-            "# found in the LICENSE file.\n"
-            "import(\"//build/config/msvc_crt.gni\")\n")
-        tools.replace_in_file(config_gn_file,
             "//build/config/win:default_crt",
-            ":conan_crt"
+            "//build/config/msvc:conan_crt"
         )
 
 
