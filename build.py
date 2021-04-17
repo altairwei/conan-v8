@@ -13,7 +13,7 @@ if __name__ == "__main__":
                 "arch": "x86_64",
                 "build_type": build_type,
                 "compiler": "Visual Studio",
-                "compiler.version": 15,
+                "compiler.version": 16,
                 "compiler.runtime": "MT"
             })
     else:

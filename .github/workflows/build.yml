@@ -74,7 +74,7 @@ jobs:
         run: .ci/install_macos_deps.sh
 
       - name: Build V8
-        shell: bash -l {0}
+        shell: bash -e {0}
         run: |
           echo "$(which python)"
           python build.py
