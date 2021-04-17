@@ -68,7 +68,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.8' 
-          architecture: 'x64'
+          architecture: 'x86'
 
       - name: Install dependencies
         run: .ci/install_macos_deps.sh
@@ -76,6 +76,7 @@ jobs:
       - name: Build V8
         shell: bash -l {0}
         run: |
+          echo "$(which python)"
           python build.py
   
   for_windows:
