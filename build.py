@@ -20,13 +20,14 @@ if __name__ == "__main__":
                 })
     elif platform.system() == "Darwin":
         for build_type in ["Release", "Debug"]:
-            builder.add(settings={
-                "arch": "x86_64",
-                "build_type": build_type,
-                "compiler": "apple-clang",
-                "compiler.version": "12.0",
-                "compiler.libcxx": "libc++"
-            })
+            for clang_version in ["10.0", "11.0", "12.0"]
+                builder.add(settings={
+                    "arch": "x86_64",
+                    "build_type": build_type,
+                    "compiler": "apple-clang",
+                    "compiler.version": clang_version,
+                    "compiler.libcxx": "libc++"
+                })
     else:
         for build_type in ["Release", "Debug"]:
             builder.add(settings={

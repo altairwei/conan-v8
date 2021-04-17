@@ -159,7 +159,6 @@ class V8Conan(ConanFile):
             #"v8_enable_backtrace = false",
             "is_clang = " + ("true" if "clang" in str(self.settings.compiler).lower() else "false")
         ]
-        # v8_enable_backtrace=false, v8_enable_i18n_support
 
         if tools.os_info.is_windows:
             gen_arguments += [

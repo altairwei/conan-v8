@@ -40,7 +40,7 @@ jobs:
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
           sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal main"
           sudo apt-get update
-          sudo apt-get install -y -qq --no-install-recommends ${{ matrix.compiler.cc }} ${{ matrix.compiler.cxx }} libc++-dev
+          sudo apt-get install -y -qq --no-install-recommends ${{ matrix.compiler.cc }} ${{ matrix.compiler.cxx }} libc++-dev libstdc++-dev
 
       - name: Install dependencies
         run: .ci/install_linux_deps.sh
@@ -55,10 +55,10 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        conan_page: [1, 2]
+        conan_page: [1, 2, 3, 4, 5, 6]
     env:
       CONAN_CURRENT_PAGE: ${{ matrix.conan_page }}
-      CONAN_TOTAL_PAGES: 2
+      CONAN_TOTAL_PAGES: 6
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -83,7 +83,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        conan_page: [1, 2]
+        conan_page: [1, 2, 3, 4]
     env:
       CONAN_CURRENT_PAGE: ${{ matrix.conan_page }}
       CONAN_TOTAL_PAGES: 4
