@@ -31,13 +31,7 @@ class V8Conan(ConanFile):
 
     def _check_python_version(self):
         """depot_tools requires python >= 2.7.5 or >= 3.8 for python 3 support."""
-        # Check if a valid python2 is available in PATH or it will failflex
-        # Start by checking if python2 can be found
-        python_exe = tools.which("python2")
-        if not python_exe:
-            # Fall back on regular python
-            python_exe = tools.which("python")
-
+        python_exe = tools.which("python")
         if not python_exe:
             msg = ("Python must be available in PATH "
                     "in order to build v8")

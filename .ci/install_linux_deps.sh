@@ -15,11 +15,4 @@ source ~/.profile
 conan user
 conan profile new default --detect
 
-if [[ "${COMPILER_NAME}" == "gcc" ]]; then
-    #conan profile update settings.compiler.libcxx=libstdc++11 default
-    echo "Skip update libcxx"
-elif [[ "${COMPILER_NAME}" == "clang" ]]; then
-    conan profile update settings.compiler.libcxx=libc++ default
-fi
-
 sudo apt-get install -y -qq --no-install-recommends gperf bison flex libc6-dev
