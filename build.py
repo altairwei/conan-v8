@@ -16,6 +16,15 @@ if __name__ == "__main__":
                 "compiler.version": 16,
                 "compiler.runtime": "MT"
             })
+    elif platform.system() == "Darwin":
+        for build_type in ["Release", "Debug"]:
+            builder.add(settings={
+                "arch": "x86_64",
+                "build_type": build_type,
+                "compiler": "apple-clang",
+                "compiler.version": "12.0",
+                "compiler.libcxx": "libc++"
+            })
     else:
         for build_type in ["Release", "Debug"]:
             builder.add(settings={

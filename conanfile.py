@@ -75,6 +75,9 @@ class V8Conan(ConanFile):
                     self.run("sudo dpkg-reconfigure --frontend noninteractive tzdata")
             if not tools.which("lsb-release"):
                 tools.SystemPackageTool().install("lsb-release")
+        if tools.os_info.is_windows:
+            if str(self.settings.compiler.version) not in ["15", "16"]:
+                raise ConanInvalidConfiguration("not yet supported visual studio version used for v8 build")
         self._check_python_version()
 
     def build_requirements(self):
@@ -94,10 +97,7 @@ class V8Conan(ConanFile):
         os.environ["DEPOT_TOOLS_PATH"] = os.path.join(self.source_folder, "depot_tools")
         if tools.os_info.is_windows:
             os.environ["DEPOT_TOOLS_WIN_TOOLCHAIN"] = "0"
-            if str(self.settings.compiler.version) not in ["15", "16"]:
-                raise ValueError("not yet supported visual studio version used for v8 build")
             os.environ["GYP_MSVS_VERSION"] = "2017" if str(self.settings.compiler.version) == "15" else "2019"
-
 
     def source(self):
         self.run("git clone --depth 1 https://chromium.googlesource.com/chromium/tools/depot_tools.git")
