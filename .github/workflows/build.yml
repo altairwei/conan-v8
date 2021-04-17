@@ -2,9 +2,6 @@ name: Build V8
 
 on: push
 
-env:
-  CONAN_TOTAL_PAGES: 2
-
 jobs:
   for_linux:
     name: Build v8 on linux
@@ -26,6 +23,7 @@ jobs:
       CXX: ${{ matrix.compiler.cxx }}
       LIBCXX: ${{ matrix.compiler.libcxx }}
       CONAN_CURRENT_PAGE: ${{ matrix.conan_page }}
+      CONAN_TOTAL_PAGES: 2
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -60,6 +58,7 @@ jobs:
         conan_page: [1, 2]
     env:
       CONAN_CURRENT_PAGE: ${{ matrix.conan_page }}
+      CONAN_TOTAL_PAGES: 2
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -87,6 +86,7 @@ jobs:
         conan_page: [1, 2]
     env:
       CONAN_CURRENT_PAGE: ${{ matrix.conan_page }}
+      CONAN_TOTAL_PAGES: 4
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
