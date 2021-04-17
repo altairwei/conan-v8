@@ -20,7 +20,7 @@ if __name__ == "__main__":
                 })
     elif platform.system() == "Darwin":
         for build_type in ["Release", "Debug"]:
-            for clang_version in ["10.0", "11.0", "12.0"]
+            for clang_version in ["10.0", "11.0", "12.0"]:
                 builder.add(settings={
                     "arch": "x86_64",
                     "build_type": build_type,
