@@ -146,18 +146,20 @@ class V8Conan(ConanFile):
             "is_debug = " + ("true" if str(self.settings.build_type) == "Debug" else "false"),
             "target_cpu = " + ('"x64"' if str(self.settings.arch) == "x86_64" else '"x86"'),
             "is_component_build = false",
-            "v8_monolithic = true",
             "is_chrome_branded = false",
-            "v8_static_library = true",
             "treat_warnings_as_errors = false",
-            "v8_use_external_startup_data = false",
-            # Do not use libc++ shipped with v8
+            # Do not use clang and libc++ shipped with v8
+            "is_clang = false",
             "use_custom_libcxx = false",
             "use_custom_libcxx_for_host = false",
             "use_glib = false",
             "use_sysroot = false",
+
+            # V8 specific settings
+            "v8_monolithic = true",
+            "v8_static_library = true",
+            "v8_use_external_startup_data = false",
             #"v8_enable_backtrace = false",
-            "is_clang = " + ("true" if "clang" in str(self.settings.compiler).lower() else "false")
         ]
 
         if tools.os_info.is_windows:
