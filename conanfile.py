@@ -191,7 +191,7 @@ class V8Conan(ConanFile):
             self.run("python --version")
             print(generator_call)
             self.run(generator_call)
-            self.run("ninja -C {folder} v8_monolith".format(folder=self.build_folder))
+            self.run("ninja -v -C {folder} v8_monolith".format(folder=self.build_folder))
 
 
     def package(self):

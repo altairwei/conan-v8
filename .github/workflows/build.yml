@@ -55,10 +55,15 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        conan_page: [1, 2, 3, 4, 5, 6]
+        conan_page: [1, 2]
+        compiler:
+          - { xcode: "10.3", clang: "10.0" }
+          - { xcode: "11.7", clang: "11.0" }
+          - { xcode: "12.4", clang: "12.0" }
     env:
       CONAN_CURRENT_PAGE: ${{ matrix.conan_page }}
-      CONAN_TOTAL_PAGES: 6
+      CONAN_TOTAL_PAGES: 2
+      CLANG_VERSION: ${{ matrix.compiler.clang }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -68,6 +73,10 @@ jobs:
         with:
           python-version: '3.8' 
           architecture: 'x64'
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ matrix.compiler.xcode }}
 
       - name: Install dependencies
         run: .ci/install_macos_deps.sh
