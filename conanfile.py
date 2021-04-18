@@ -211,11 +211,11 @@ class V8Conan(ConanFile):
         self.cpp_info.defines = [
             "V8_COMPRESS_POINTERS"
         ]
-        if str(self.settings.compiler) in ["gcc", "clang", "apple-clang"]:
+        if self.settings.compiler in ["gcc", "clang", "apple-clang"]:
             self.cpp_info.cxxflags = [
                 "-std=c++14"
             ]
-        if tools.os_info.is_windows:
+        if self.settings.os == "Windows":
             self.cpp_info.system_libs = [
                 "winmm.lib",
                 "dbghelp.lib"
@@ -223,4 +223,7 @@ class V8Conan(ConanFile):
             self.cpp_info.defines = [
                 "_HAS_ITERATOR_DEBUGGING=0"
             ]
+        else:
+            self.cpp_info.cxxflags = ["-pthread"]
+
 

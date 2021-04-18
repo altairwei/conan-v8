@@ -4,13 +4,13 @@ project(PackageTest CXX)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-find_package(Threads REQUIRED)
+#find_package(Threads REQUIRED)
 
 #set(CMAKE_CXX_STANDARD 14)
 #add_definitions(-DV8_COMPRESS_POINTERS)
 
 add_executable(example example.cpp)
-target_link_libraries(example ${CONAN_LIBS} Threads::Threads)
+target_link_libraries(example ${CONAN_LIBS})
 
 if (WIN32)
     #add_definitions(-D_HAS_ITERATOR_DEBUGGING=0)
