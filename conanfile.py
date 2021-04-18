@@ -142,14 +142,16 @@ class V8Conan(ConanFile):
 
     def _gen_arguments(self):
         # Refer to v8/infra/mb/mb_config.pyl
+        is_debug = "true" if str(self.settings.build_type) == "Debug" else "false"
         gen_arguments = [
-            "is_debug = " + ("true" if str(self.settings.build_type) == "Debug" else "false"),
+            "is_debug = " + is_debug,
+            "enable_iterator_debugging = " + is_debug, # TODO: make it configurable
+
             "target_cpu = " + ('"x64"' if str(self.settings.arch) == "x86_64" else '"x86"'),
             "is_component_build = false",
             "is_chrome_branded = false",
             "treat_warnings_as_errors = false",
-            # Do not use clang and libc++ shipped with v8
-            "is_clang = false",
+            "is_clang = false", # Do not use clang and libc++ shipped with v8
             "use_custom_libcxx = false",
             "use_custom_libcxx_for_host = false",
             "use_glib = false",
