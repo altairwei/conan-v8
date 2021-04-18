@@ -208,22 +208,24 @@ class V8Conan(ConanFile):
     def package_info(self):
         self.cpp_info.libs = ["v8_monolith"]
         self.cpp_info.includedirs.append("include/v8")
-        self.cpp_info.defines = [
+
+        # Pre-configured settings come with conan-v8
+        self.cpp_info.defines += [
             "V8_COMPRESS_POINTERS"
         ]
         if self.settings.compiler in ["gcc", "clang", "apple-clang"]:
-            self.cpp_info.cxxflags = [
+            self.cpp_info.cxxflags += [
                 "-std=c++14"
             ]
         if self.settings.os == "Windows":
-            self.cpp_info.system_libs = [
+            self.cpp_info.system_libs += [
                 "winmm.lib",
                 "dbghelp.lib"
             ]
-            self.cpp_info.defines = [
+            self.cpp_info.defines += [
                 "_HAS_ITERATOR_DEBUGGING=0"
             ]
         else:
-            self.cpp_info.cxxflags = ["-pthread"]
+            self.cpp_info.cxxflags += ["-pthread"]
 
 
