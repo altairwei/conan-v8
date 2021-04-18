@@ -13,6 +13,7 @@ add_executable(example example.cpp)
 target_link_libraries(example ${CONAN_LIBS} Threads::Threads)
 
 if (WIN32)
+    add_definitions(-D_HAS_ITERATOR_DEBUGGING=0)
     target_link_libraries(example winmm.lib dbghelp.lib)
 endif()
 

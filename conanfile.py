@@ -145,7 +145,7 @@ class V8Conan(ConanFile):
         is_debug = "true" if str(self.settings.build_type) == "Debug" else "false"
         gen_arguments = [
             "is_debug = " + is_debug,
-            "enable_iterator_debugging = " + is_debug, # TODO: make it configurable
+            #"enable_iterator_debugging = " + is_debug, # TODO: make it configurable
 
             "target_cpu = " + ('"x64"' if str(self.settings.arch) == "x86_64" else '"x86"'),
             "is_component_build = false",
