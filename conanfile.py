@@ -148,7 +148,7 @@ class V8Conan(ConanFile):
         tools.mkdir(conan_toolchain_folder)
         shutil.copy(
             os.path.join(self.source_folder, "linux_toolchain.gn"),
-            os.path.join(msvc_config_folder, "BUILD.gn"))
+            os.path.join(conan_toolchain_folder, "BUILD.gn"))
 
     def _gen_arguments(self):
         # Refer to v8/infra/mb/mb_config.pyl
