@@ -24,7 +24,7 @@ class V8Conan(ConanFile):
     generators = "cmake"
     short_paths = True
 
-    exports_sources = ["msvc_crt.gn"]
+    exports_sources = ["msvc_crt.gn", "linux_toolchain.gn"]
 
     _source_subfolder = "source_subfolder"
     _build_subfolder = "build_subfolder"
@@ -106,6 +106,7 @@ class V8Conan(ConanFile):
         self.run("fetch v8")
         with tools.chdir("v8"):
             self.run("git checkout {}".format(self.version))
+            self.run("gclient sync")
 
     @staticmethod
     def get_gn_profile(settings):
@@ -139,6 +140,15 @@ class V8Conan(ConanFile):
             "//build/config/msvc:conan_crt"
         )
 
+    def _define_conan_toolchain(self):
+        v8_source_root = os.path.join(self.source_folder, "v8")
+        conan_toolchain_folder = os.path.join(v8_source_root, "build", "toolchain", "conan", "linux")
+        if os.path.exists(os.path.join(conan_toolchain_folder, "BUILD.gn")):
+            return
+        ools.mkdir(conan_toolchain_folder)
+        shutil.copy(
+            os.path.join(self.source_folder, "linux_toolchain.gn"),
+            os.path.join(msvc_config_folder, "BUILD.gn"))
 
     def _gen_arguments(self):
         # Refer to v8/infra/mb/mb_config.pyl
@@ -171,8 +181,12 @@ class V8Conan(ConanFile):
 
         if tools.os_info.is_linux:
             gen_arguments += [
-                "custom_toolchain=\"//build/toolchain/linux/unbundle:default\"",
-                "host_toolchain=\"//build/toolchain/linux/unbundle:default\""
+                "custom_toolchain=\"//build/toolchain/conan/linux:%s_%s\"" % (
+                    self.settings.compiler, self.settings.arch
+                ),
+                "host_toolchain=\"//build/toolchain/conan/linux:%s_%s\"" % (
+                    self.settings.compiler, self.settings.arch
+                )
             ]
 
         return gen_arguments
@@ -186,8 +200,6 @@ class V8Conan(ConanFile):
             self._install_system_requirements_linux()
 
         with tools.chdir(v8_source_root):
-            self.run("gclient sync")
-
             if tools.os_info.is_windows and str(self.settings.compiler) == "Visual Studio":
                 self._patch_msvc_runtime()
 
