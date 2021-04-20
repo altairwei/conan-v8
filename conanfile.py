@@ -198,6 +198,7 @@ class V8Conan(ConanFile):
 
         if tools.os_info.is_linux:
             self._install_system_requirements_linux()
+            self._define_conan_toolchain()
 
         with tools.chdir(v8_source_root):
             if tools.os_info.is_windows and str(self.settings.compiler) == "Visual Studio":
