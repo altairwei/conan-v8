@@ -145,7 +145,7 @@ class V8Conan(ConanFile):
         conan_toolchain_folder = os.path.join(v8_source_root, "build", "toolchain", "conan", "linux")
         if os.path.exists(os.path.join(conan_toolchain_folder, "BUILD.gn")):
             return
-        ools.mkdir(conan_toolchain_folder)
+        tools.mkdir(conan_toolchain_folder)
         shutil.copy(
             os.path.join(self.source_folder, "linux_toolchain.gn"),
             os.path.join(msvc_config_folder, "BUILD.gn"))
