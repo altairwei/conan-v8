@@ -78,6 +78,8 @@ class V8Conan(ConanFile):
         if tools.os_info.is_windows:
             if str(self.settings.compiler.version) not in ["15", "16"]:
                 raise ConanInvalidConfiguration("not yet supported visual studio version used for v8 build")
+        if self.settings.arch not in ["x86", "x86_64"]:
+            raise ConanInvalidConfiguration("Only x86 and x86_64 have been tested.")
         self._check_python_version()
 
     def build_requirements(self):
@@ -125,30 +127,44 @@ class V8Conan(ConanFile):
         cmd = "export DEBIAN_FRONTEND=noninteractive && " + cmd
         self.run(cmd)
 
+    def _patch_gn_build_system(self, source_file, dest_folder):
+        if os.path.exists(os.path.join(dest_folder, "BUILD.gn")):
+            return False
+        tools.mkdir(dest_folder)
+        shutil.copy(
+            os.path.join(self.source_folder, source_file),
+            os.path.join(dest_folder, "BUILD.gn"))
+        return True
+
     def _patch_msvc_runtime(self):
         v8_source_root = os.path.join(self.source_folder, "v8")
-        msvc_config_folder = os.path.join(v8_source_root, "build", "config", "msvc")
-        if os.path.exists(os.path.join(msvc_config_folder, "BUILD.gn")):
+        msvc_config_folder = os.path.join(v8_source_root, "build", "config", "conan", "msvc")
+        ok = self._patch_gn_build_system("msvc_crt.gn", msvc_config_folder)
+        if not ok:
             return
-        tools.mkdir(msvc_config_folder)
-        shutil.copy(
-            os.path.join(self.source_folder, "msvc_crt.gn"),
-            os.path.join(msvc_config_folder, "BUILD.gn"))
         config_gn_file = os.path.join(v8_source_root, "build", "config", "BUILDCONFIG.gn")
         tools.replace_in_file(config_gn_file,
             "//build/config/win:default_crt",
-            "//build/config/msvc:conan_crt"
+            "//build/config/conan/msvc:conan_crt"
         )
 
     def _define_conan_toolchain(self):
         v8_source_root = os.path.join(self.source_folder, "v8")
         conan_toolchain_folder = os.path.join(v8_source_root, "build", "toolchain", "conan", "linux")
-        if os.path.exists(os.path.join(conan_toolchain_folder, "BUILD.gn")):
+        self._patch_gn_build_system("linux_toolchain.gn", conan_toolchain_folder)
+
+    def _path_compiler_config(self):
+        v8_source_root = os.path.join(self.source_folder, "v8")
+        libcxx_config_folder = os.path.join(v8_source_root, "build", "config", "conan", "libcxx")
+        ok = self._patch_gn_build_system("libcxx_config.gn", conan_toolchain_folder)
+        if not ok:
             return
-        tools.mkdir(conan_toolchain_folder)
-        shutil.copy(
-            os.path.join(self.source_folder, "linux_toolchain.gn"),
-            os.path.join(conan_toolchain_folder, "BUILD.gn"))
+        config_gn_file = os.path.join(v8_source_root, "build", "config", "BUILDCONFIG.gn")
+        tools.replace_in_file(config_gn_file,
+            "default_compiler_configs = [",
+            "default_compiler_configs = [\n"
+            "  \"//build/config/conan/libcxx:conan_libcxx\",\n"
+        )
 
     def _gen_arguments(self):
         # Refer to v8/infra/mb/mb_config.pyl
@@ -180,13 +196,16 @@ class V8Conan(ConanFile):
             ]
 
         if tools.os_info.is_linux:
+            toolchain_to_use = "//build/toolchain/conan/linux:%s_%s" % self.settings.compiler, self.settings.arch
             gen_arguments += [
-                "custom_toolchain=\"//build/toolchain/conan/linux:%s_%s\"" % (
-                    self.settings.compiler, self.settings.arch
-                ),
-                "host_toolchain=\"//build/toolchain/conan/linux:%s_%s\"" % (
-                    self.settings.compiler, self.settings.arch
-                )
+                "custom_toolchain=\"%s\"" % toolchain_to_use,
+                "host_toolchain=\"%s\"" % toolchain_to_use
+            ]
+
+        if tools.os_info.is_linux or tools.os_info.is_macos:
+            gen_arguments += [
+                "conan_compiler_name = \"%s\"" % self.settings.compiler,
+                "conan_compiler_libcxx = \"%s\"" % self.settings.libcxx
             ]
 
         return gen_arguments
@@ -199,6 +218,9 @@ class V8Conan(ConanFile):
         if tools.os_info.is_linux:
             self._install_system_requirements_linux()
             self._define_conan_toolchain()
+
+        if tools.os_info.is_linux or tools.os_info.is_macos:
+            self._path_compiler_config()
 
         with tools.chdir(v8_source_root):
             if tools.os_info.is_windows and str(self.settings.compiler) == "Visual Studio":
