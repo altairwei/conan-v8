@@ -169,6 +169,12 @@ class V8Conan(ConanFile):
                 "conan_compiler_runtime = \"%s\"" % str(self.settings.compiler.runtime)
             ]
 
+        if tools.os_info.is_linux:
+            gen_arguments += [
+                "custom_toolchain=\"//build/toolchain/linux/unbundle:default\"",
+                "host_toolchain=\"//build/toolchain/linux/unbundle:default\""
+            ]
+
         return gen_arguments
 
 
