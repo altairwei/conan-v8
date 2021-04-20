@@ -9,12 +9,18 @@ jobs:
     strategy:
       matrix:
         compiler:
-          - { name: gcc,    version: 7,       cc: gcc-7,      cxx: g++-7,       libcxx: libstdc++,  ar: "ar",           nm: "nm"}
-          - { name: gcc,    version: 8,       cc: gcc-8,      cxx: g++-8,       libcxx: libstdc++,  ar: "ar",           nm: "nm"}
-          - { name: gcc,    version: 9,       cc: gcc-9,      cxx: g++-9,       libcxx: libstdc++,  ar: "ar",           nm: "nm"}
-          - { name: clang,  version: '6.0',   cc: clang-6.0,  cxx: clang++-6.0, libcxx: libstdc++,  ar: "llvm-ar-6.0",  nm: "llvm-nm-6.0" }
-          - { name: clang,  version: '7.0',   cc: clang-7,    cxx: clang++-7,   libcxx: libstdc++,  ar: "llvm-ar-7",    nm: "llvm-nm-7" }
-          - { name: clang,  version: 8,       cc: clang-8,    cxx: clang++-8,   libcxx: libstdc++,  ar: "llvm-ar-8",    nm: "llvm-nm-8" }
+          - { name: gcc,          version: 7,         cc: gcc-7,          cxx: g++-7,
+              libcxx: libstdc++,  ar: "ar",           nm: "nm",           pkgs: ""}
+          - { name: gcc,          version: 8,         cc: gcc-8,          cxx: g++-8,       
+              libcxx: libstdc++,  ar: "ar",           nm: "nm",           pkgs: ""}
+          - { name: gcc,          version: 9,         cc: gcc-9,          cxx: g++-9,       
+              libcxx: libstdc++,  ar: "ar",           nm: "nm",           pkgs: ""}
+          - { name: clang,        version: '6.0',     cc: clang-6.0,      cxx: clang++-6.0, 
+              libcxx: libstdc++,  ar: "llvm-ar-6.0",  nm: "llvm-nm-6.0",  pkgs: "llvm-6.0"}
+          - { name: clang,        version: '7.0',     cc: clang-7,        cxx: clang++-7,   
+              libcxx: libstdc++,  ar: "llvm-ar-7",    nm: "llvm-nm-7",    pkgs: "llvm-7"}
+          - { name: clang,        version: 8,         cc: clang-8,        cxx: clang++-8,   
+              libcxx: libstdc++,  ar: "llvm-ar-8",    nm: "llvm-nm-8",    pkgs: "llvm-8"}
         conan_page: [1, 2]
     env:
       COMPILER_NAME: ${{ matrix.compiler.name }}
@@ -42,7 +48,8 @@ jobs:
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
           sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal main"
           sudo apt-get update
-          sudo apt-get install -y -qq --no-install-recommends ${{ matrix.compiler.cc }} ${{ matrix.compiler.cxx }} libc++-dev
+          sudo apt-get install -y -qq --no-install-recommends ${{ matrix.compiler.cc }} ${{ matrix.compiler.cxx }} \
+            libc++-dev ${{ matrix.compiler.pkgs }}
 
       - name: Install dependencies
         run: .ci/install_linux_deps.sh
