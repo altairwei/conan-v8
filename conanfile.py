@@ -156,7 +156,7 @@ class V8Conan(ConanFile):
     def _path_compiler_config(self):
         v8_source_root = os.path.join(self.source_folder, "v8")
         libcxx_config_folder = os.path.join(v8_source_root, "build", "config", "conan", "libcxx")
-        ok = self._patch_gn_build_system("libcxx_config.gn", conan_toolchain_folder)
+        ok = self._patch_gn_build_system("libcxx_config.gn", libcxx_config_folder)
         if not ok:
             return
         config_gn_file = os.path.join(v8_source_root, "build", "config", "BUILDCONFIG.gn")
