@@ -202,7 +202,7 @@ class V8Conan(ConanFile):
             ]
 
         if tools.os_info.is_linux:
-            toolchain_to_use = "//build/toolchain/conan/linux:%s_%s" % self.settings.compiler, self.settings.arch
+            toolchain_to_use = "//build/toolchain/conan/linux:%s_%s" % (self.settings.compiler, self.settings.arch)
             gen_arguments += [
                 "custom_toolchain=\"%s\"" % toolchain_to_use,
                 "host_toolchain=\"%s\"" % toolchain_to_use
@@ -211,7 +211,7 @@ class V8Conan(ConanFile):
         if tools.os_info.is_linux or tools.os_info.is_macos:
             gen_arguments += [
                 "conan_compiler_name = \"%s\"" % self.settings.compiler,
-                "conan_compiler_libcxx = \"%s\"" % self.settings.libcxx
+                "conan_compiler_libcxx = \"%s\"" % self.settings.compiler.libcxx
             ]
 
         return gen_arguments
