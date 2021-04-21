@@ -211,7 +211,7 @@ class V8Conan(ConanFile):
         if tools.os_info.is_linux or tools.os_info.is_macos:
             gen_arguments += [
                 "conan_compiler_name = \"%s\"" % self.settings.compiler,
-                #"conan_compiler_libcxx = \"%s\"" % self.settings.compiler.libcxx
+                "conan_compiler_libcxx = \"%s\"" % self.settings.compiler.libcxx
             ]
 
         return gen_arguments
