@@ -70,6 +70,7 @@ class V8Conan(ConanFile):
 
     def system_requirements(self):
         if tools.os_info.is_linux:
+            '''
             if not tools.SystemPackageTool().installed("tzdata"):
                 if tools.os_info.linux_distro == "ubuntu":
                     # Install tzdata without user input
@@ -77,6 +78,7 @@ class V8Conan(ConanFile):
                     self.run("sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime")
                     tools.SystemPackageTool().install("tzdata")
                     self.run("sudo dpkg-reconfigure --frontend noninteractive tzdata")
+            '''
             if not tools.which("lsb-release"):
                 tools.SystemPackageTool().install("lsb-release")
         if tools.os_info.is_windows:
