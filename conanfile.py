@@ -184,7 +184,7 @@ class V8Conan(ConanFile):
             "is_chrome_branded = false",
             "treat_warnings_as_errors = false",
             "is_clang = false", # Do not use clang and libc++ shipped with v8
-            "use_custom_libcxx = " + ("true" if str(self.settings.compiler.libcxx) == "libc++" else "false"),
+            "use_custom_libcxx = false",
             "use_custom_libcxx_for_host = false",
             "use_glib = false",
             "use_sysroot = false",
