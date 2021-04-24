@@ -2,6 +2,14 @@ name: Build V8
 
 on: push
 
+env:
+  CONAN_USERNAME: ${{ secrets.CONAN_USERNAME }}
+  CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
+  CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
+  CONAN_UPLOAD: ${{ secrets.CONAN_UPLOAD }}
+  CONAN_CHANNEL: "testing"
+  CONAN_UPLOAD_ONLY_WHEN_STABLE: 0
+
 jobs:
   for_linux:
     name: Build v8 on linux
@@ -66,9 +74,7 @@ jobs:
       matrix:
         conan_page: [1, 2]
         compiler:
-          - { xcode: "10.3", clang: "10.0", sdk: "10.14" }
           - { xcode: "11.7", clang: "11.0", sdk: "10.15"  }
-          - { xcode: "12.4", clang: "12.0", sdk: "11.1"  }
     env:
       CONAN_CURRENT_PAGE: ${{ matrix.conan_page }}
       CONAN_TOTAL_PAGES: 2

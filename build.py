@@ -5,7 +5,6 @@ from cpt.packager import ConanMultiPackager
 
 if __name__ == "__main__":
     builder = ConanMultiPackager(
-        username="altair_wei",
         upload_dependencies="all",
         build_policy="missing")
     if platform.system() == "Windows":
