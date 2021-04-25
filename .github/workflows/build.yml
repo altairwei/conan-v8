@@ -109,9 +109,13 @@ jobs:
     strategy:
       matrix:
         conan_page: [1, 2, 3, 4]
+        compiler:
+          - { name: "Visual Studio", full_name: "Visual Studio 2019", version: 16 }
     env:
       CONAN_CURRENT_PAGE: ${{ matrix.conan_page }}
       CONAN_TOTAL_PAGES: 4
+      COMPILER_NAME: ${{ matrix.compiler.name }}
+      COMPILER_VERSION: ${{ matrix.compiler.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

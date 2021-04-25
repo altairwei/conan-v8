@@ -1,26 +1,28 @@
 build: false
 
 environment:
-    PYTHON_HOME: "C:\\Python38"
-    CONAN_TOTAL_PAGES: 4
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    CONAN_VISUAL_VERSIONS: 15
-    CONAN_USERNAME:
-      secure: t7I7K+psSLTrQkhO1ojuAg==
-    CONAN_LOGIN_USERNAME:
-      secure: hdPhXu8ksElUdNEE/WXxXN6bu8qliFp+5FcbxEUOBVw=
-    CONAN_PASSWORD:
-      secure: 09LLcSUX0l9SuJkSZoR+VlQfLpyMZWRKN/TrFzVqwuE=
-    CONAN_UPLOAD:
-      secure: Ra4URl0XJfzBXPhatMZbw0GCecGZJLutUVxRU44ULFudV+QjvBwG+ndAAuiS61TZbaa+ETHaKgtaaqusFs1ECw==
-    CONAN_CHANNEL: "testing"
-    CONAN_UPLOAD_ONLY_WHEN_STABLE: 0
+  PYTHON_HOME: "C:\\Python38"
+  CONAN_TOTAL_PAGES: 4
+  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+  CONAN_VISUAL_VERSIONS: 15
+  COMPILER_NAME: Visual Studio
+  COMPILER_VERSION: 15
+  CONAN_USERNAME:
+    secure: t7I7K+psSLTrQkhO1ojuAg==
+  CONAN_LOGIN_USERNAME:
+    secure: hdPhXu8ksElUdNEE/WXxXN6bu8qliFp+5FcbxEUOBVw=
+  CONAN_PASSWORD:
+    secure: 09LLcSUX0l9SuJkSZoR+VlQfLpyMZWRKN/TrFzVqwuE=
+  CONAN_UPLOAD:
+    secure: Ra4URl0XJfzBXPhatMZbw0GCecGZJLutUVxRU44ULFudV+QjvBwG+ndAAuiS61TZbaa+ETHaKgtaaqusFs1ECw==
+  CONAN_CHANNEL: "testing"
+  CONAN_UPLOAD_ONLY_WHEN_STABLE: 0
 
-    matrix:
-        - CONAN_CURRENT_PAGE: 1
-        - CONAN_CURRENT_PAGE: 2
-        - CONAN_CURRENT_PAGE: 3
-        - CONAN_CURRENT_PAGE: 4
+  matrix:
+    - CONAN_CURRENT_PAGE: 1
+    - CONAN_CURRENT_PAGE: 2
+    - CONAN_CURRENT_PAGE: 3
+    - CONAN_CURRENT_PAGE: 4
 
 install:
   - set PATH=%PYTHON_HOME%;%PYTHON_HOME%/Scripts/;%PATH%

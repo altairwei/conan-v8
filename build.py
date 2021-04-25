@@ -13,8 +13,8 @@ if __name__ == "__main__":
                 builder.add(settings={
                     "arch": "x86_64",
                     "build_type": build_type,
-                    "compiler": "Visual Studio",
-                    "compiler.version": 16,
+                    "compiler": os.environ["COMPILER_NAME"],
+                    "compiler.version": os.environ["COMPILER_VERSION"],
                     "compiler.runtime": crt + "d" if build_type == "Debug" else crt
                 })
     elif platform.system() == "Darwin":

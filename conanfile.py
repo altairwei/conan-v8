@@ -125,6 +125,7 @@ class V8Conan(ConanFile):
 
     def _install_system_requirements_linux(self):
         """some extra script must be executed on linux"""
+        self.output.info("Calling v8/build/install-build-deps.sh")
         os.environ["PATH"] += os.pathsep + os.path.join(self.source_folder, "depot_tools")
         sh_script = self.source_folder + "/v8/build/install-build-deps.sh"
         self.run("chmod +x " + sh_script)
