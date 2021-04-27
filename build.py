@@ -4,9 +4,7 @@ from cpt.packager import ConanMultiPackager
 
 
 if __name__ == "__main__":
-    builder = ConanMultiPackager(
-        upload_dependencies="all",
-        build_policy="outdated")
+    builder = ConanMultiPackager(build_policy="outdated", upload_only_recipe = True)
     if platform.system() == "Windows":
         for build_type in ["Release", "Debug"]:
             for crt in ["MT", "MD"]:

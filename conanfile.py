@@ -68,24 +68,18 @@ class V8Conan(ConanFile):
                     "{} or >= {})".format(verstr, py2_min, py2_max, py3_min))
             raise ConanInvalidConfiguration(msg)
 
-    def system_requirements(self):
-        if tools.os_info.is_linux:
-            '''
-            if not tools.SystemPackageTool().installed("tzdata"):
-                if tools.os_info.linux_distro == "ubuntu":
-                    # Install tzdata without user input
-                    os.environ["DEBIAN_FRONTEND"] = "noninteractive"
-                    self.run("sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime")
-                    tools.SystemPackageTool().install("tzdata")
-                    self.run("sudo dpkg-reconfigure --frontend noninteractive tzdata")
-            '''
-            if not tools.which("lsb-release"):
-                tools.SystemPackageTool().install("lsb-release")
-        if tools.os_info.is_windows:
-            if str(self.settings.compiler.version) not in ["15", "16"]:
-                raise ConanInvalidConfiguration("not yet supported visual studio version used for v8 build")
+    def configure(self):
         if self.settings.arch not in ["x86", "x86_64"]:
             raise ConanInvalidConfiguration("Only x86 and x86_64 have been tested.")
+        if self.settings.os == "Windows":
+            if self.settings.compiler == "Visual Studio" and
+                str(self.settings.compiler.version) not in ["16"]:
+                raise ConanInvalidConfiguration("Only Visual Studio 16 is supported.")
+
+    def system_requirements(self):
+        if tools.os_info.is_linux:
+            if not tools.which("lsb-release"):
+                tools.SystemPackageTool().install("lsb-release")
         self._check_python_version()
 
     def build_requirements(self):
