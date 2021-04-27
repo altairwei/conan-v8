@@ -25,7 +25,7 @@ environment:
     - CONAN_CURRENT_PAGE: 4
 
 install:
-  - choco install windows-sdk-10-version-2004-windbg
+  - choco install windows-sdk-10-version-2004-all
   - set PATH=%PYTHON_HOME%;%PYTHON_HOME%/Scripts/;%PATH%
   - pip.exe install conan --upgrade
   - pip.exe install conan_package_tools
