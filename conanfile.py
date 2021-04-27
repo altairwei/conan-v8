@@ -72,8 +72,8 @@ class V8Conan(ConanFile):
         if self.settings.arch not in ["x86", "x86_64"]:
             raise ConanInvalidConfiguration("Only x86 and x86_64 have been tested.")
         if self.settings.os == "Windows":
-            if self.settings.compiler == "Visual Studio" and
-                str(self.settings.compiler.version) not in ["16"]:
+            if (self.settings.compiler == "Visual Studio" and
+                    str(self.settings.compiler.version) not in ["16"]):
                 raise ConanInvalidConfiguration("Only Visual Studio 16 is supported.")
 
     def system_requirements(self):
