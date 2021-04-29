@@ -244,13 +244,13 @@ class V8Conan(ConanFile):
         self.copy(pattern="LICENSE*", dst="licenses", src="v8")
         self.copy(pattern="*v8_monolith.a", dst="lib", keep_path=False)
         self.copy(pattern="*v8_monolith.lib", dst="lib", keep_path=False)
-        self.copy(pattern="*.h", dst="include/v8", src="v8/include", keep_path=True)
-        self.copy(pattern="*.h", dst="include/v8/src", src="v8/src", keep_path=True)
+        self.copy(pattern="*.h", dst="include/v8/include", src="v8/include", keep_path=True)
 
 
     def package_info(self):
         self.cpp_info.libs = ["v8_monolith"]
         self.cpp_info.includedirs.append("include/v8")
+        self.cpp_info.includedirs.append("include/v8/include")
 
         # Pre-configured settings come with conan-v8
         self.cpp_info.defines += [
